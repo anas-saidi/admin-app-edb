@@ -95,6 +95,7 @@ export class TransactionsBackofficeComponent {
       response => {
         console.log('Transaction blocked successfully', response);
         // Handle successful response
+        window.location.reload()
       },
       error => {
         console.error('Error blocking transaction', error);
@@ -108,7 +109,7 @@ export class TransactionsBackofficeComponent {
     this.apiService.UnblockTransaction(this.transReq).subscribe(
       response => {
         console.log('Transaction blocked successfully', response);
-        // Handle successful response
+        window.location.reload()
       },
       error => {
         console.error('Error blocking transaction', error);
