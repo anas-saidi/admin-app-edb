@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TransactionsBackofficeComponent } from './transactions-backoffice/transactions-backoffice.component';
+import { ToastrModule } from 'ngx-toastr';  
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { TransactionsBackofficeComponent } from './transactions-backoffice/trans
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot()  
   ],
   providers: [],
   bootstrap: [AppComponent]

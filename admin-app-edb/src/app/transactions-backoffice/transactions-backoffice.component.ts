@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiServiceService } from '../api-service.service';
+import { ToastrService } from 'ngx-toastr';  
+
 
 @Component({
   selector: 'app-transactions-backoffice',
@@ -8,11 +10,15 @@ import { ApiServiceService } from '../api-service.service';
 })
 
 export class TransactionsBackofficeComponent {
-  constructor(private apiService: ApiServiceService) {}
+  constructor(private apiService: ApiServiceService,private toastr:ToastrService) {}
   transactions: any[] = [];
   transReq: any = {
     reference: ''
   };
+
+  showToaster(message:string){  
+    this.toastr.success(message)  
+}  
   ngOnInit() {
     this.apiService.getAllTransactions().subscribe(
       (transactionsData) => {
@@ -95,7 +101,22 @@ export class TransactionsBackofficeComponent {
       response => {
         console.log('Transaction blocked successfully', response);
         // Handle successful response
-        window.location.reload()
+        this.closeEditModal(); // Close the modal here
+        this.showToaster("Transaction was blocked successfully");
+        this.apiService.getAllTransactions().subscribe(
+          (transactionsData) => {
+            this.transactions = transactionsData.map((t: any) => {
+              let t1: any = { ...t };
+              t1.selected = false;
+              return t1;
+            });
+            this.renderedTransactions = this.transactions;
+            console.log('transactions', this.transactions);
+          },
+          (error) => {
+            console.log('error getting transactions', error);
+          }
+        );
       },
       error => {
         console.error('Error blocking transaction', error);
@@ -108,8 +129,24 @@ export class TransactionsBackofficeComponent {
     console.log(this.transReq)
     this.apiService.UnblockTransaction(this.transReq).subscribe(
       response => {
-        console.log('Transaction blocked successfully', response);
-        window.location.reload()
+        console.log('Transaction was unblocked successfully', response);
+        this.closeEditModal(); // Close the modal here
+        this.showToaster("Transaction was unblocked successfully")
+        this.apiService.getAllTransactions().subscribe(
+          (transactionsData) => {
+            this.transactions = transactionsData.map((t: any) => {
+              let t1: any = { ...t };
+              t1.selected = false;
+              return t1;
+            });
+            this.renderedTransactions = this.transactions;
+            console.log('transactions', this.transactions);
+          },
+          (error) => {
+            console.log('error getting transactions', error);
+          }
+        );
+        
       },
       error => {
         console.error('Error blocking transaction', error);
@@ -117,4 +154,6 @@ export class TransactionsBackofficeComponent {
       }
     );
   }
+
+
 }
